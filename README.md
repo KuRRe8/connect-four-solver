@@ -1,29 +1,5 @@
+# 自动游玩GameBoardArena平台的四子棋游戏
 
-Connect-four game solver inspired by https://blog.gamesolver.org/solving-connect-four/01-introduction/
-# God play
-![god-play](https://user-images.githubusercontent.com/39423416/155876883-7d9e92e9-a12a-45d9-85f8-5d6385301602.gif)
+四子棋是一个非常适合用来练习算法的小游戏。已有论文有用minimax加α β剪枝的有用dqn和ppo的。
 
-# Build
-```
-g++ -std=c++17 -O3 main.cpp
-```
-
-# Usage
-## Test solver
-```
-./a.out solve -l table -t 8 < Test_L1_R1
-```
-## Compute and dump scores for all positions with starting state
-```
-./a.out search -s 12 -d 8
-```
-
-## Play against AI
-```
-./a.out play -l table -t 8
-```
-
-## Watch AI play against itself
-```
-./a.out play -l table -t 8 -a1 ai -a2 ai
-```
+这个软件核心实现是minimax，按dfs来搜索，工程优化和核心实现都是Pascal Pons做的，语言优化是biran做的，算法核心只有一个main.cc。我做的是自动化py脚本适配GameBoardArena平台。
