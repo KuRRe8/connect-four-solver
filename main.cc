@@ -469,11 +469,15 @@ void printHelpAndExit() {
     << " ./main solve  # solve game states, take input from stdin." << std::endl
     << " ./main search [-s <starting-moves>] [-d <depth>] # compute and print score table up to given depth (default 8)" << std::endl
     << " ./main play # play with solver with text UI" << std::endl
+    << " ./main suggest [-s <starting-moves>] [-d <depth>] # suggest the best move for the next player" << std::endl
     << " Optional flags:"<< std::endl
     << "  -l <score-table-file>  # load score table" << std::endl
     << "  -t <pin-score-depth-thresh> pin score into cache if depth <= this threshold" << std::endl
     << "  -a1 [ai|human] agent 1 when playing, default: human" << std::endl
-    << "  -a2 [ai|human] agent 2 when playing, default: ai" << std::endl;
+    << "  -a2 [ai|human] agent 2 when playing, default: ai" << std::endl
+    << "  -bp <bitboard-pos>  # specify BitBoard position" << std::endl
+    << "  -bm <bitboard-mask> # specify BitBoard mask" << std::endl
+    << "  -bo <bitboard-moves> # specify BitBoard moves" << std::endl;
   exit(-1);
 }
 
@@ -486,6 +490,9 @@ struct Args {
   bool weakSolver = false;
   std::string agent1 = "human";
   std::string agent2 = "ai";
+  int64_t bitBoardPos = 0;
+  int64_t bitBoardMask = 0;
+  int bitBoardMoves = 0;
 };
 
 Args parseArgs(int argc, char** argv) {
@@ -513,6 +520,17 @@ Args parseArgs(int argc, char** argv) {
               args.agent1 = argv[++i];
             } else if (s[2] == '2') {
               args.agent2 = argv[++i];
+            } else {
+              printHelpAndExit();
+            }
+            break;
+          case 'b':
+            if (s[2] == 'p') {
+              args.bitBoardPos = std::stoll(argv[++i]);
+            } else if (s[2] == 'm') {
+              args.bitBoardMask = std::stoll(argv[++i]);
+            } else if (s[2] == 'o') {
+              args.bitBoardMoves = std::atoi(argv[++i]);
             } else {
               printHelpAndExit();
             }
@@ -559,6 +577,11 @@ public:
         break;
       }
     }
+  }
+
+  int play(BitBoard& b, std::unique_ptr<Agent>& agent) {
+    int64_t move = agent->get_move(b);
+    return move_to_column(move) + 1;
   }
 };
 
@@ -610,6 +633,13 @@ int main(int argc, char** argv) {
       makeAgent(solver, args.agent2),
     };
     GameRunner().play(b, agents);
+  } else if (args.cmd == "suggest") {
+    BitBoard b(args.bitBoardPos,args.bitBoardMask,args.bitBoardMoves);
+    Solver solver(table);
+    auto agent = makeAgent(solver, "ai");
+    int bestMoveColumn = GameRunner().play(b, agent);
+    std::cout << bestMoveColumn << std::endl;
+    return 0;
   } else {
     printHelpAndExit();
   }
