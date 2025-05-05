@@ -199,7 +199,15 @@ def cmd8():
 
             if ingame:
                 # 游戏中逻辑
+                last_refresh_time = time.time()  # 初始化上次刷新时间
                 while ingame and not stop_flag:
+                    current_time = time.time()
+                    if current_time - last_refresh_time >= 15:  # 每15秒刷新一次页面
+                        print("刷新页面...")
+                        driver.refresh()
+                        time.sleep(2)  # 等待页面刷新完成
+                        last_refresh_time = current_time
+
                     try:
                         element = driver.find_element(By.ID, "pagemaintitletext")
                         if "游戏结束" in element.text:
