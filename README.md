@@ -1,5 +1,5 @@
-# 自动游玩GameBoardArena平台的四子棋游戏
+# 自动游玩某平台的四子棋游戏
 
 四子棋是一个非常适合用来练习算法的小游戏。已有论文有用minimax加α β剪枝的有用dqn和ppo的。
 
-这个软件核心实现是minimax，按dfs来搜索，工程优化和核心实现都是Pascal Pons做的，语言优化是biran做的，算法核心只有一个main.cc。我做的是自动化py脚本适配GameBoardArena平台。
+这个软件核心实现是minimax，按dfs来搜索，工程优化和核心实现都是Pascal Pons做的，语言优化是biran做的，算法核心只有一个main.cc。我做的是自动化py脚本适配平台。
